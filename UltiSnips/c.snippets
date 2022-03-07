@@ -1,0 +1,27 @@
+# Author: Nova Senco
+# Last Change: 19 April 2021
+
+snippet template "small template" b
+#include <stdio.h>
+
+int main(void) {
+	${0:puts("Hello, world.");}
+
+	return 0;
+}
+endsnippet
+
+snippet argtemplate "small template with args" b
+#include <stdio.h>
+
+int main(int argc, char *argv[], char *envp[]) {
+	${0:puts("Hello, world.");}
+
+	return 0;
+}
+endsnippet
+
+snippet p "printf"
+printf("${1:%s}\n", ${2:str});
+endsnippet
+
