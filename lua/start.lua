@@ -1,69 +1,61 @@
 -- Author: Nova Senco
--- Last Change: 05 March 2022
+-- Last Change: 12 March 2022
 
 local start = {}
 
 -- by default, don't auto-open quickfix if error loading lua file
 start.autoqf = false
 
-function start:tryload(name)
+function start:tryload(name, errors)
   -- try to load a lua file in runtimepath
-  --
-  --   return table (error) keys:
-  --     file: full path to lua file that failed to load ($XDG_CONFIG_HOME
-  --           assumed if no file exists)
-  --     err: error message
-  --     lnum: line number if relevant
   --
   --   args:
   --     name: name of file to load from $rtp/lua/`name`.lua
-  --
-  --   return:
-  --     nil if successful load;
-  --     table with file, err, lnum keys if failed
+  --     errrs: list of errors to append to for qflist
 
-  -- protected call + require lua file
-  local ld, err = pcall(require, name)
-
-  -- if ld is true, then successful load; return nil
-  if ld then return nil end
-
-  -- try to find the lua file in &runtimepath
-  local file = nil
-  for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
-    local path = path..'/lua/'..name..'.lua'
-    if vim.fn.filereadable(path) ~= 0 then
-      file = path
-      break
+  local ld = xpcall(require, function(err)
+    local i = 2
+    local init = vim.env.MYVIMRC
+    -- print('error:', err)
+    while true do
+      i = i + 1
+      local info = debug.getinfo(i)
+      if not info then break end
+      -- print(vim.inspect(info))
+      if i == 3 and info.what == 'Lua' and info.short_src:sub(1, 1) ~= '/' then
+        -- loading init/{file}.lua failed; handle specially
+        if err:sub(1, #info.short_src) == info.short_src then
+          err = err:sub(#info.short_src + 1)
+          local _,nend = err:find(':%d+:%s+')
+          err = err:sub(nend + 1)
+        end
+        local lnum = err:match('^/.-:(%d): ', 1)
+        local fname
+        if lnum then
+          local _,fend = err:find('^/.-:%d:')
+          fend = fend - 2 - #tostring(lnum)
+          fname = err:sub(1, fend)
+        else
+          err = 'Failed to load init '..init..': '..err
+          fname = init
+        end
+        table.insert(errors, {
+          type     = 'E',
+          filename = fname,
+          text     = err,
+          lnum     = lnum
+        })
+      elseif info.currentline ~= -1 and info.linedefined == 0 and info.short_src ~= init and info.what == 'main' then
+        -- some other required file in the stack trace failed; append to errors
+          table.insert(errors, {
+            type     = 'E',
+            filename = info.short_src,
+            text     = err,
+            lnum     = info.currentline
+          })
+      end
     end
-  end
-
-  local lnum = nil -- line number for error
-  if file then
-
-    -- try find line number ...
-    -- 1: strip filename length from beginning of file
-    -- 2: grab anything that looks like s/^:(\d+):/\1/
-    local num, numpos = string.gsub(string.sub(err, #file + 1), "^:(%d+):.*", "%1", 1)
-    if numpos == 1 then
-      lnum = num
-    end
-
-  else -- file not found ...
-
-    -- set error to better msg, 'file not found', since file DNE
-    err = "lua file not found; did you mean to add this file?"
-
-    -- assume user meant to add to $XDG_CONFIG_HOME/nvim/lua/*.lua
-    file = vim.fn.stdpath("config").."/lua/"..name..".lua"
-
-  end
-
-  return {
-    file = file, -- lua file pertaining to error
-    err = err,   -- error message
-    lnum = lnum, -- line number pertaining to error if relevant
-  }
+  end, name)
 
 end
 
@@ -76,17 +68,20 @@ function start:loadall(names)
   -- return: nil
 
   -- try to load all names; add each error to errors
+  -- local errors = vim.fn.getqflist()
   local errors = {}
   for _, name in ipairs(names) do
-    local ld = start:tryload(name)
-    if ld then table.insert(errors, { filename=ld.file, type="E", text=ld.err, lnum=ld.lnum }) end
+    start:tryload(name, errors)
   end
 
   -- set quickfix list to errors if any
   if #errors ~= 0 then
-    vim.fn.setqflist(errors) -- set quickfix list to errors
+    vim.fn.setqflist(errors, 'a') -- set quickfix list to errors
     if start.autoqf then
-      vim.api.nvim_command("bot copen") -- auto-open quickfix list?
+      -- auto-open quickfix list?
+      local win = vim.api.nvim_get_current_win()
+      vim.api.nvim_command("bot copen")
+      vim.api.nvim_set_current_win(win)
     end
   end
 end

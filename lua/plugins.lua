@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 07 March 2022
+-- Last Change: 12 March 2022
 
 local sync
 local packer
@@ -37,12 +37,12 @@ function plugins(use) -- {{{1
   --   opt=true,
   -- }
 
-  use { -- vimtex {{{2
-    'lervag/vimtex',
-    ft={'tex'},
-    tag='v1.6',
-    opt=true
-  }
+  -- use { -- vimtex {{{2
+  --   'lervag/vimtex',
+  --   ft={'tex'},
+  --   tag='v1.6',
+  --   opt=true
+  -- }
   use { -- tex-conceal {{{2
     'KeitaNakamura/tex-conceal.vim', as='tex-conceal',
     ft={'tex'},
@@ -52,8 +52,8 @@ function plugins(use) -- {{{1
   use { -- treesitter {{{2
     'nvim-treesitter/nvim-treesitter', as='treesitter',
         config=function()
-          local success, treecfg = pcall(require, 'nvim-treesitter.configs')
-          if not success then return end
+          local ok, treecfg = pcall(require, 'nvim-treesitter.configs')
+          if not ok then return end
           treecfg.setup {
             -- "all", "maintained", or a list of languages
             ensure_installed = { 'c', 'cpp', 'make', 'bash', 'html', 'css',
@@ -75,7 +75,6 @@ function plugins(use) -- {{{1
   use { -- playground {{{2
     'nvim-treesitter/playground'
   }
-
 
   -- use { -- vim-pasta {{{2
   --   'sickill/vim-pasta', as='pasta'
@@ -142,6 +141,10 @@ function plugins(use) -- {{{1
     requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
   }
 
+  use { -- luasnips {{{2
+    'L3MON4D3/LuaSnip'
+  }
+
   use { -- snap {{{2
     'novasenco/snap'
   }
@@ -166,15 +169,19 @@ function plugins(use) -- {{{1
 end -- }}}
 
 -- auto-install and -setup {{{1
+
 local install_path = vim.fn.stdpath('config')..'/pack/packer/start/packer'
 local psep = vim.loop.os_uname().version:match("Windows") and '\\' or '/'
+
 if vim.fn.isdirectory(install_path) == 0 then
   sync = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path}) and true
   -- os.execute 'git clone --depth 1 https://github.com/wbthomason/packer.nvim pack/packer/start/packer '..install_path
   -- sync = true
-  vim.cmd 'packadd packer'
+  vim.cmd'packadd packer'
 end
-packer = require('packer')
+
+packer = require'packer'
+
 -- }}}
 
 return packer.startup({

@@ -1,13 +1,9 @@
 " Author: Nova Senco
-" Last Change: 09 May 2021
+" Last Change: 10 March 2022
 
 let s:folddash = '●'
 
 function! fold#text()
-  let cms = &commentstring =~ '%s' ? '\%('.escape(split(&commentstring, '%s')[0], '~$^*[]\.').'\)\?' : ''
-  let dash = tr(v:folddashes, '-', get(g:, 'folddash', s:folddash))
-  let line = substitute(getline(v:foldstart), '^\s\{-}\zs\t', repeat(' ', &tabstop), 'g')
-  let line = substitute(line, escape(split(&foldmarker, ',')[0], '~$^*[]\.')..'\d*\s*', '', '')
-  return substitute(line, '^\s*'.cms.'\s*', dash.' ', '')
+  return substitute(substitute(getline(v:foldstart),'\%(^\s*\)\@<=\t',repeat(' ',&tabstop),'g'),escape(split(&foldmarker,',')[0],'~$^*[]\.')..'\d*\s*',repeat(get(g:,'folddash',s:folddash),v:foldlevel),'')
 endfunction
 

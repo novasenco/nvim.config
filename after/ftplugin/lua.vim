@@ -1,7 +1,7 @@
 " Author: Nova Senco
-" Last Change: 05 March 2022
+" Last Change: 07 March 2022
 
-nnoremap <buffer> <localleader>S :luafile %<cr>
+nnoremap <buffer> <silent> <localleader>S :luafile %<cr>
 
 " let b:undo_ftplugin = 'nunmap '
 

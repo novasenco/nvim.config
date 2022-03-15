@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 07 March 2022
+-- Last Change: 10 March 2022
 
 -- helpers {{{1
 local default = function(op) return vim.api.nvim_get_option_info(op).default end
@@ -42,7 +42,7 @@ vim.o.cpoptions      = default'cpo'..'y'
 vim.o.diffopt        = default'dip'..',foldcolumn:0,indent-heuristic'
 vim.o.directory      = nvim_dir'SWAP'..'//'
 vim.o.expandtab      = true
-vim.o.fillchars      = 'fold: ,eob:%,diff:a'
+vim.o.fillchars      = 'fold: ,eob:▢,diff:a'
 vim.o.foldlevelstart = 1
 vim.o.foldmethod     = 'marker'
 vim.o.grepprg        = executable'rg' and 'rg --vimgrep --no-heading' or default'grepprg'
@@ -51,7 +51,7 @@ vim.o.hidden         = true
 vim.o.ignorecase     = true
 vim.o.inccommand     = 'nosplit'
 vim.o.joinspaces     = false
-vim.o.laststatus     = 2
+vim.o.laststatus     = 1
 vim.o.lazyredraw     = true
 vim.o.list           = false
 vim.o.listchars      = 'trail:·,tab:›·,nbsp:○'
