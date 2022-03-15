@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 11 March 2022
+-- Last Change: 14 March 2022
 
 local A = require'autocmd-utils':build_autocmd('NovaInit')
 
@@ -83,5 +83,5 @@ A('ColorScheme', 'highlight ColorColumn ctermbg=235 guibg=#262626', 'nokto')
 -- A('FileType', 'TSBufDisable highlight', 'html')
 
 -- md2pdf
-A('BufWritePost', 'call md2pdf#convert', '*.md')
+A('BufWritePost', 'call md2pdf#convert()', '*.md')
 
