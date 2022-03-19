@@ -1,31 +1,24 @@
 -- Author: Nova Senco
--- Last Change: 14 March 2022
+-- Last Change: 19 March 2022
 
-local A = require'autocmd-utils':build_autocmd('NovaInit')
+local A = require'autocmd-utils'.build_autocmd('NovaInit')
 
 -- save and restore view persistently
 A('BufWinLeave', 'call mkview#make()')
 A('VimLeave', 'call mkview#make()')
 A('BufWinEnter', 'call mkview#load()')
 
-A('BufWinEnter', "if !has('vim_starting') || !empty(bufname())")
-A('BufWinEnter', '  set concealcursor=n') --  hide concealed text in normal
-A('BufWinEnter', '  set conceallevel=2') -- conceal fully, but show cchar if defined
-A('BufWinEnter', 'endif')
-
 -- *do NOT* insert comment when using o/O in normal mode
 -- *do* insert comment when pressing <cr> in insert mode
-A('BufWinEnter', 'set formatoptions+=r')
-A('BufWinEnter', 'set formatoptions-=o')
+--      EVER.
+A('BufWinEnter', 'setlocal formatoptions+=r')
+A('BufWinEnter', 'setlocal formatoptions-=o')
+A('FileType',    'setlocal formatoptions+=r')
+A('FileType',    'setlocal formatoptions-=o')
 
--- save and restore window before and after hivis runs
-A('User', 'let w:hivis_viewsav = winsaveview()', 'HivisPre')
-A('User', 'call winrestview(w:hivis_viewsav)', 'Hivis')
-
--- *don't* insert comment when using o/O in normal mode
--- *do* insert comment when pressing <cr> in insert mode
-A('FileType', 'setlocal formatoptions+=r')
-A('FileType', 'setlocal formatoptions-=o')
+-- -- save and restore window before and after hivis runs
+-- A('User', 'let w:hivis_viewsav = winsaveview()', 'HivisPre')
+-- A('User', 'call winrestview(w:hivis_viewsav)', 'Hivis')
 
 -- autohandle swapfiles
 A('SwapExists', "call autocmd#HandleSwap(expand('<afile>:p'))")
@@ -52,7 +45,7 @@ A('BufRead', '1d', '*.pdf')
 A('CmdlineChanged', 'silent! foldopen', '[/?]')
 
 -- A('BufWritePost', [[exe "lua require'packer'.sync()" | exe 'doautocmd ColorScheme' g:colors_name]], '*/lua/plugins.lua')
-A('BufWritePost', function() package.loaded.plugins = nil require'packer'.sync() end, '*/lua/plugins.lua')
+A('BufWritePost', function() package.loaded.plugins = nil require'plugins' require'packer'.sync() end, '*/lua/plugins.lua')
 
 -- auto close response when terminal closed
 A('TermClose', [[call feedkeys("\<esc>", 'nt')]])
@@ -76,12 +69,9 @@ A('BufWinEnter,WinEnter,CmdlineLeave', 'endif')
 -- A('OptionSet', "endif')
 
 -- No background :3
-A('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'nokto')
-A('ColorScheme', 'highlight ColorColumn ctermbg=235 guibg=#262626', 'nokto')
+-- A('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'nokto')
+-- A('ColorScheme', 'highlight ColorColumn ctermbg=235 guibg=#262626', 'nokto')
 -- A('ColorScheme', 'highlight NonText ctermbg=NONE guibg=NONE cterm=bold gui=bold', 'nokto')
 
 -- A('FileType', 'TSBufDisable highlight', 'html')
-
--- md2pdf
-A('BufWritePost', 'call md2pdf#convert()', '*.md')
 

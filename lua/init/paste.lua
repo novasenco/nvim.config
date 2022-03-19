@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 10 March 2022
+-- Last Change: 18 March 2022
 
 -- Usage:
 --   <leader>BB ------------------ paste current line to {paste-site}
@@ -47,16 +47,17 @@
 --   envs    -> https://envs.sh
 --   termbin -> https://termbin.com
 
-local m = require'map-utils'
-local c = vim.api.nvim_add_user_command
+local M = require'map-utils'
+local C = vim.api.nvim_add_user_command
+local o
 
-m:nmap('sn', '<leader>B', ':<c-u>set opfunc=paste#bin<cr>g@')
-m:xmap('sn', '<leader>B', ':<c-u>call paste#bin(visualmode())<cr>')
-m:nmap('s', '<leader>BB', 'V<space>B')
+M.nmap('sn', '<leader>B', ':<c-u>set opfunc=paste#bin<cr>g@')
+M.xmap('sn', '<leader>B', ':<c-u>call paste#bin(visualmode())<cr>')
+M.nmap('s', '<leader>BB', 'V<space>B')
 
 o = { bang=false, complete='customlist,paste#complete', range='%', nargs='?', bar=true }
-c('Pastebin', "call paste#bin('command', <line1>, <line2>, <q-args>)", o)
+C('Pastebin', "call paste#bin('command', <line1>, <line2>, <q-args>)", o)
 
 o = { bang=true, complete='customlist,paste#complete', nargs=1, bar=true }
-c('Pbset', "execute 'let' (<bang>0 ? 'b:' : 'g:')..'pastebin = <q-args>'", o)
+C('Pbset', "execute 'let' (<bang>0 ? 'b:' : 'g:')..'pastebin = <q-args>'", o)
 

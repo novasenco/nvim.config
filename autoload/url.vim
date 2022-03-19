@@ -1,9 +1,9 @@
 " Author: Nova Senco
-" Last Change: 10 March 2022
+" Last Change: 18 March 2022
 
 let s:urlRegex = '\v%(https?://)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}>%([-a-zA-Z0-9()@:%_\+.~#?&//=*]*)'
 
-function! maps#UrlSelect(forwards, count)
+function! url#UrlSelect(forwards, count)
   execute "normal! \<c-bslash>\<c-N>"
   if !search(s:urlRegex, (a:forwards?'':'b')..'w')
     return
@@ -16,7 +16,7 @@ function! maps#UrlSelect(forwards, count)
   normal! o
 endfunction
 
-function! url# V_gx()
+function! url#V_gx()
   let [q, u] = [getreg('"'), getreg('_')]
   normal! y
   execute 'silent !xdg-open' '"'.escape(@", '\"$').'"'
@@ -24,7 +24,7 @@ function! url# V_gx()
   call setreg('_', u)
 endfunction
 
-function! maps#GX(...)
+function! url#GX(...)
   if a:0
     let url = a:1
   else

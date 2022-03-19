@@ -1,28 +1,28 @@
 " Author: Nova Senco
-" Last Change: 14 May 2021
+" Last Change: 18 March 2022
 
 function! s:ix(f) " sets language based on file extension
-  return printf("sh -c 'curl -sF \"f:1=@%s\" http://ix.io'", a:f)
+  return printf("sh -c 'curl -sF \"f:1=@%s\" http://ix.io'", escape(a:f, "'"))
 endfunction
 
 function! s:sprunge(f)
-  return printf("sh -c 'curl -sF \"sprunge=<%s\" http://sprunge.us'", a:f)
+  return printf("sh -c 'curl -sF \"sprunge=<%s\" http://sprunge.us'", escape(a:f, "'"))
 endfunction
 
 function! s:vpaste(f)
-  return printf("sh -c 'curl -sF \"text=<%s\" http://vpaste.net?ft=%s&bg=dark'", a:f, &ft)
+  return printf("sh -c 'curl -sF \"text=<%s\" http://vpaste.net?ft=%s&bg=dark'", escape(a:f, "'"), &ft)
 endfunction
 
 function! s:clbin(f)
-  return printf("sh -c 'curl -sF \"clbin=<%s\" https://clbin.com'", a:f)
+  return printf("sh -c 'curl -sF \"clbin=<%s\" https://clbin.com'", escape(a:f, "'"))
 endfunction
 
 function! s:envs(f)
-  return printf("sh -c 'curl -sF \"file=@\" https://envs.sh'", a:f)
+  return printf("sh -c 'curl -sF \"file=@%s\" https://envs.sh'", escape(a:f, "'"))
 endfunction
 
 function! s:termbin(f) " slow
-  return printf("sh -c 'cat \"%s\" | nc termbin.com 9999'", a:f)
+  return printf("sh -c 'cat \"%s\" | nc termbin.com 9999'", escape(a:f, '"'))
 endfunction
 
 
@@ -115,8 +115,12 @@ function! paste#bin(type, ...) abort
       execute 'silent !xdg-open' fnameescape(out)
     endif
     redraw
-    call setreg('+', out)
-    unsilent echon '@+ Clipboard ->' string(out)
+    if has('clipboard')
+      call setreg('+', out)
+      unsilent echon '@+ Clipboard ->' string(out)
+    else
+      unsilent echon 'no clipboard -> @+ not set'
+    endif
   else
     unsilent echon "\n" out
   endif

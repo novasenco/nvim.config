@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 12 March 2022
+-- Last Change: 19 March 2022
 
 local sync
 local packer
@@ -82,16 +82,24 @@ function plugins(use) -- {{{1
 
   use { -- markdown {{{2
     'tpope/vim-markdown', as='markdown',
-        ft={'markdown'}
-      }
+    ft={'markdown'}
+  }
 
-  use { 'tpope/vim-repeat', as='repeat-tpope' }
+  use { -- repeat {{{2
+    'tpope/vim-repeat', as='repeat-tpope'
+  }
 
-  use { 'vim-scripts/ReplaceWithRegister' , as='replace-with-register' }
+  use { -- replace with register {{{2
+    'vim-scripts/ReplaceWithRegister' , as='replace-with-register'
+  }
 
-  use   'godlygeek/tabular'
+  use { -- tabular {{{2
+    'godlygeek/tabular'
+  }
 
-  use { 'junegunn/fzf.vim', as='fzf' }
+  -- fzf {{{2
+  use { 'junegunn/fzf' }
+  use { 'junegunn/fzf.vim' }
 
   use { -- goyo {{{2
     'junegunn/goyo.vim', as='goyo',
@@ -158,6 +166,11 @@ function plugins(use) -- {{{1
   }
   -- }}}
 
+  -- use { 'preservim/vim-markdown', as='preserve-markdown' }
+  -- use { -- ptppt {{{2
+  --   'novasenco/ptppt.vim', as='ptppt',
+  -- } -- }}}
+
   -- auto-sync {{{2
   if sync then
     packer.update()
@@ -189,6 +202,7 @@ return packer.startup({
   config = {
     package_root = vim.fn.stdpath('config')..'/pack',
     compile_path = vim.fn.stdpath('config')..'/pack/packer_compiled.lua',
+    working_sym = '↻',
     log = { level = 'fatal' },
   }
 })

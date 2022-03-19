@@ -1,7 +1,10 @@
 -- Author: Nova Senco
--- Last Change: 10 March 2022
+-- Last Change: 18 March 2022
 
--- helpers {{{1
+-- init {{{1
+
+-- helpers {{{2
+
 local default = function(op) return vim.api.nvim_get_option_info(op).default end
 local executable = function(cmd) return vim.fn.executable(cmd) ~= 0 end
 local nvim_dir = function(t)
@@ -12,30 +15,31 @@ local nvim_dir = function(t)
   return e and tostring(e)
 end
 
--- $XDG_{DATA,CACHE}_DIR {{{1
+-- $XDG_{DATA,CACHE}_DIR {{{2
 for _,p in ipairs{'data', 'cache'} do
   local e = tostring(vim.fn.getenv(string.format('XDG_%s_DIR', string.upper(p))))
   local e1 = e..'/nvim'
   vim.fn.setenv('NVIM_'..p:upper()..'_DIR', e and e1 or vim.fn.stdpath(p))
 end
 
--- $NVIM_{BACKUP,SWAP,UNDO}_DIR {{{1
+-- $NVIM_{BACKUP,SWAP,UNDO}_DIR {{{2
 for p,t in pairs({['BACKUP']='DATA', ['SWAP']='CACHE', ['UNDO']='DATA'}) do
   local e = nvim_dir(p)
   if e == '' or not e then
     e = 'NVIM_'..p..'_DIR'
     local dir = vim.fn.stdpath(t:lower())..'/'..p:lower()
     vim.fn.setenv(e, dir)
-    vim.fn.mkdir(dir, 'p') -- did I fix da bug
+    vim.fn.mkdir(dir, 'p')
   end
 end
+
 -- }}}
 
 vim.o.backup         = true
 vim.o.backupdir      = nvim_dir'BACKUP'..'//'
 vim.o.backupext      = '.bak'
 vim.o.breakindent    = true
-vim.o.breakindentopt = 'min:10,shift:8'
+vim.o.breakindentopt = 'min:10,shift:1'
 vim.o.colorcolumn    = '+0'
 vim.o.completeopt    = 'menu,menuone'
 vim.o.cpoptions      = default'cpo'..'y'
