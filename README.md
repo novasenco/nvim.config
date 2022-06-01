@@ -184,7 +184,7 @@ autocmd function (using a closure) that adds autocmds to that created augroup.
 Here's an example.
 
 ```lua
-local au = require('autocmd-utils').build_autocmd('MyAugroup')
+local au = require('autocmd-utils').build('MyAugroup')
 au('VimEnter', [[unsilent echom 'Hello, welcome to nvim']])
 au('FileType', function() print"You're editing a markdown file" end, 'markdown')
 ```

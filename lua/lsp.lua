@@ -1,58 +1,69 @@
 -- Author: Nova Senco
--- Last Change: 19 March 2022
+-- Last Change: 01 June 2022
 
-local lspconfig = require'lspconfig'
-local M = require'map-utils'
+local lsploaded, lspconfig = pcall(require, 'lspconfig')
+if not lsploaded then return false end
+
+local map = require'utils.map'
 
 -- global keymaps {{{1
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-M.nmap('ns', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<cr>')
-M.nmap('ns', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-M.nmap('ns', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
-M.nmap('ns', '<leader>E', '<cmd>lua vim.diagnostic.setloclist()<cr>')
+map.n('ns', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<cr>')
+map.n('ns', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+map.n('ns', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+map.n('ns', '<leader>D', '<cmd>lua vim.diagnostic.setloclist()<cr>')
 
--- }}}
-
--- on_attach function {{{1
+-- Lsp Setup {{{1
 
 local function on_attach(_, bnr)
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
 
-  -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  M.bnmap(bnr, 'ns', 'gD',         '<cmd>lua vim.lsp.buf.declaration()<cr>')
-  M.bnmap(bnr, 'ns', 'gd',         '<cmd>lua vim.lsp.buf.definition()<cr>')
-  M.bnmap(bnr, 'ns', 'K',          '<cmd>lua vim.lsp.buf.hover()<cr>')
-  M.bnmap(bnr, 'ns', 'gi',         '<cmd>lua vim.lsp.buf.implementation()<cr>')
-  M.bnmap(bnr, 'ns', '<c-k>',      '<cmd>lua vim.lsp.buf.signature_help()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<cr>')
-  M.bnmap(bnr, 'ns', '<leader>D',  '<cmd>lua vim.lsp.buf.type_definition()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>gr', '<cmd>lua vim.lsp.buf.references()<cr>')
-  M.bnmap(bnr, 'ns', '<leader>f',  '<cmd>lua vim.lsp.buf.formatting()<cr>')
+  local function m(l, c) map.bn(bnr, 'ns', l, '<cmd>lua '..c..'<cr>') end
+  m('gD',         'vim.lsp.buf.declaration()')
+  m('gd',         'vim.lsp.buf.definition()')
+  m('K',          'vim.lsp.buf.hover()')
+  m('gi',         'vim.lsp.buf.implementation()')
+  m('<c-k>',      'vim.lsp.buf.signature_help()')
+  m('<leader>wa', 'vim.lsp.buf.add_workspace_folder()')
+  m('<leader>wr', 'vim.lsp.buf.remove_workspace_folder()')
+  m('<leader>wl', 'print(vim.inspect(vim.lsp.buf.list_workspace_folders()))')
+  m('<leader>bt', 'vim.lsp.buf.type_definition()')
+  m('<leader>br',  'vim.lsp.buf.rename()')
+  m('<leader>ba',  'vim.lsp.buf.code_action()')
+  m('<leader>br', 'vim.lsp.buf.references()')
+  m('<leader>bf', 'vim.lsp.buf.formatting()')
+end
 
-end -- }}}
+local function setup(name, cfg)
+  if not cfg then cfg = {} end
+  cfg.on_attach = on_attach
+  lspconfig[name].setup(cfg)
+end
 
--- c {{{1
 
-lspconfig.clangd.setup { on_attach = on_attach }
+-- c {{{2
 
--- lua {{{1
+setup'clangd'
+setup'ccls'
+
+-- lua {{{2
 
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
-lspconfig.sumneko_lua.setup {
-  on_attach = on_attach,
+setup('sumneko_lua', {
+  on_new_config = function(cfg, root)
+    if root == os.getenv'HOME'..'/.config/awesome' then
+      cfg.settings.Lua.diagnostics.globals = {'awesome', 'tag', 'client', 'screen'}
+    elseif root == os.getenv'HOME'..'/.config/nvim' then
+      cfg.settings.Lua.diagnostics.globals = {'vim'}
+    end
+  end,
   cmd = { os.getenv'HOME'..'/git/lua-language-server/bin/lua-language-server' },
   settings = {
     Lua = {
@@ -63,8 +74,8 @@ lspconfig.sumneko_lua.setup {
         path = runtime_path,
       },
       diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
+        -- globals = {'vim', 'awesome', 'tag'},
+        disable = {'lowercase-global'}
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
@@ -77,4 +88,26 @@ lspconfig.sumneko_lua.setup {
       },
     },
   },
-}
+})
+
+-- vim {{{2
+
+setup('vimls', {
+  diagnostic = { enable = true },
+  indexes = {
+    projectRootPatterns = { "runtime", "nvim", ".git", "autoload", "plugin" },
+    runtimepath = true,
+  },
+  iskeyword = "@,48-57,_,192-255,-#",
+  runtimepath = "",
+  suggest = {
+    fromRuntimepath = true,
+    fromVimruntime = true
+  },
+  vimruntime = ""
+})
+
+-- }}}1
+
+return true
+

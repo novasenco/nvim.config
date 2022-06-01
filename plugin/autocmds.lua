@@ -1,7 +1,7 @@
 -- Author: Nova Senco
--- Last Change: 19 March 2022
+-- Last Change: 01 June 2022
 
-local A = require'autocmd-utils'.build_autocmd('NovaInit')
+local A = require'utils.autocmd'.build('NovaAutocmds')
 
 -- save and restore view persistently
 A('BufWinLeave', 'call mkview#make()')
@@ -51,22 +51,15 @@ A('BufWritePost', function() package.loaded.plugins = nil require'plugins' requi
 A('TermClose', [[call feedkeys("\<esc>", 'nt')]])
 
 -- start insert when entering terminal window that was left with above mappings
-A('BufWinEnter,WinEnter,CmdlineLeave', "if &bt is 'terminal' && get(b:, '_term_ins_')")
-A('BufWinEnter,WinEnter,CmdlineLeave', '  startinsert')
-A('BufWinEnter,WinEnter,CmdlineLeave', '  unlet! b:_term_ins_')
-A('BufWinEnter,WinEnter,CmdlineLeave', 'endif')
+A({'BufWinEnter','WinEnter','CmdlineLeave'}, "if &bt is 'terminal' && get(b:, '_term_ins_')")
+A({'BufWinEnter','WinEnter','CmdlineLeave'}, '  startinsert')
+A({'BufWinEnter','WinEnter','CmdlineLeave'}, '  unlet! b:_term_ins_')
+A({'BufWinEnter','WinEnter','CmdlineLeave'}, 'endif')
+
+A({'BufNewFile'}, [[call setline(1, readfile(stdpath('config')..'/lua/snippets/.skel'))]], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
+A({'BufNewFile'}, [[echo 'New snippet buffer created; read snippet skeleton (lua/snippets/.skel)']], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
 
 -- A('FileType', 'set fdm=marker')
-
--- " jankicus maximus
--- A('BufRead', '++nested set filetype=lua')
--- A('OptionSet', "if v:option_new == 'lua'")
--- A('OptionSet', "  unlet b:current_syntax")
--- A('OptionSet', "  syntax include @VIM syntax/vim.vim")
--- A('OptionSet', "  let b:current_syntax = 'lua'")
--- A('OptionSet', "  syntax region luaNvimExec matchgroup=Snip keepend start=+\\%(vim\\.api\\.nvim_exec(\\)\\@<=\\[\\[+ end=+\\]\\]+ containedin=luaString contained contains=@VIM")
--- A('OptionSet', "  highlight! link vimFunctionError vimFunction")
--- A('OptionSet', "endif')
 
 -- No background :3
 -- A('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'nokto')

@@ -1,7 +1,7 @@
 -- Author: Nova Senco
--- Last Change: 18 March 2022
+-- Last Change: 01 June 2022
 
-local C = vim.api.nvim_add_user_command
+local C = vim.api.nvim_create_user_command
 local o -- opts
 
 o = { bang=true, bar=true, nargs='?' }
@@ -63,3 +63,10 @@ C('Cclear', 'call setqflist([], "r")', { nargs=0 })
 
 -- neovim, come on, bestie
 C('Sterminal', '<mods> split | terminal <args>', { nargs='*' })
+
+-- C('Snip', function(c)
+--   local f = vim.fn.stdpath('config')..'/lua/snippets/'..(c.args == '' and vim.o.filetype or c.args)..'.lua'
+--   vim.cmd("execute 'edit' fnameescape("..vim.fn.string(f)..')')
+-- end, {nargs='?'})
+C('Snip', "execute 'edit' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})
+C('Ssnip', "execute <q-mods> 'sp' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})

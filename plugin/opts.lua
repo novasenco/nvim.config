@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 18 March 2022
+-- Last Change: 14 April 2022
 
 -- init {{{1
 
@@ -50,7 +50,7 @@ vim.o.fillchars      = 'fold: ,eob:▢,diff:a'
 vim.o.foldlevelstart = 1
 vim.o.foldmethod     = 'marker'
 vim.o.grepprg        = executable'rg' and 'rg --vimgrep --no-heading' or default'grepprg'
-vim.o.guicursor      = ''
+vim.o.guicursor      = 'n-v-ve-o-i-r-c-ci-cr-sm-a:blinkon0'
 vim.o.hidden         = true
 vim.o.ignorecase     = true
 vim.o.inccommand     = 'nosplit'

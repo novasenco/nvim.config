@@ -1,10 +1,12 @@
 -- Author: Nova Senco
--- Last Change: 19 March 2022
+-- Last Change: 15 April 2022
 
 local sync
 local packer
+local au = require'utils.autocmd'.build'NovaPlugins'
 
-function plugins(use) -- {{{1
+-- plugins {{{1
+local function plugins(use)
 
   use { -- packer {{{2
     -- required to avoid annoyances
@@ -52,6 +54,7 @@ function plugins(use) -- {{{1
   use { -- treesitter {{{2
     'nvim-treesitter/nvim-treesitter', as='treesitter',
         config=function()
+          if TreesitterInstalled then return end -- in case this file re-sourced
           local ok, treecfg = pcall(require, 'nvim-treesitter.configs')
           if not ok then return end
           treecfg.setup {
@@ -69,11 +72,13 @@ function plugins(use) -- {{{1
             incremental_selection = { enable = true },
             textobjects = { enable = true },
           }
+          TreesitterInstalled = true
         end
       }
 
   use { -- playground {{{2
-    'nvim-treesitter/playground'
+    'nvim-treesitter/playground',
+    opt=true
   }
 
   -- use { -- vim-pasta {{{2
@@ -146,7 +151,7 @@ function plugins(use) -- {{{1
   use { -- telescope {{{2
     'nvim-telescope/telescope.nvim', as='telescope',
     opt=true,
-    requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
+    requires = { {'nvim-lua/plenary.nvim'} }
   }
 
   use { -- luasnips {{{2
@@ -164,12 +169,19 @@ function plugins(use) -- {{{1
     config=vim.cmd'sil! colo nokto',            -- default colorscheme
     run=function() vim.cmd'sil! colo nokto' end -- :colo nokto after installed
   }
-  -- }}}
+  use { -- gruvbox8
+    'lifepillar/gruvbox8'
+  }
 
-  -- use { 'preservim/vim-markdown', as='preserve-markdown' }
+  -- use { -- preserve/markdown {{{2
+  --   'preservim/vim-markdown', as='preserve-markdown' }
+  -- }
+
   -- use { -- ptppt {{{2
   --   'novasenco/ptppt.vim', as='ptppt',
-  -- } -- }}}
+  -- }
+
+  -- }}}
 
   -- auto-sync {{{2
   if sync then
@@ -179,12 +191,11 @@ function plugins(use) -- {{{1
     packer.install()
   end -- }}}
 
-end -- }}}
+end
 
 -- auto-install and -setup {{{1
 
 local install_path = vim.fn.stdpath('config')..'/pack/packer/start/packer'
-local psep = vim.loop.os_uname().version:match("Windows") and '\\' or '/'
 
 if vim.fn.isdirectory(install_path) == 0 then
   sync = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path}) and true
@@ -195,9 +206,21 @@ end
 
 packer = require'packer'
 
--- }}}
+-- load colorscheme after plugins if colorscheme not yet installed {{{1
+if vim.g.colors_name == 'default' then
+  au('User', 'silent! colorscheme nokto', 'PackerComplete')
+end
 
-return packer.startup({
+-- lsp loading failed; reload plugins loaded {{{1
+if not require'lsp' then
+  au('User', function()
+    package.loaded.lsp = nil
+    require'lsp'
+  end, 'PackerComplete')
+end
+
+-- packer startup {{{1
+packer.startup({
   plugins,
   config = {
     package_root = vim.fn.stdpath('config')..'/pack',
