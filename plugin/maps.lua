@@ -234,49 +234,49 @@ map.c('n', '<c-t>', "<c-t><c-r>=execute('sil! foldo!')[-1]<cr>")
 -- snap {{{1
 
 -- insert placeholder
-map.i('', '<m-;>', '<plug>(snapSimple)')
+map.i('', '<m-p>', '<plug>(snapSimple)')
 -- insert reminder
-map.i('', '<m-:>', '<plug>(snapText)')
+map.i('', '<m-P>', '<plug>(snapText)')
 
 -- snap to next placeholder
-map.i('', '<m-l>', '<plug>(snapNext)')
-map.n('', '<m-l>', '<plug>(snapNext)')
-map.x('', '<m-l>', '<plug>(snapNext)')
-map.s('', '<m-l>', '<plug>(snapNext)')
-map.o('', '<m-l>', '<plug>(snapNext)')
+map.i('', '<m-o>', '<plug>(snapNext)')
+map.n('', '<m-o>', '<plug>(snapNext)')
+map.x('', '<m-o>', '<plug>(snapNext)')
+map.s('', '<m-o>', '<plug>(snapNext)')
+map.o('', '<m-o>', '<plug>(snapNext)')
 
 -- repeat last snap on next placeholder
-map.i('', '<m-L>', '<plug>(snapRepeatNext)')
-map.n('', '<m-L>', '<plug>(snapRepeatNext)')
-map.x('', '<m-L>', '<plug>(snapRepeatNext)')
-map.s('', '<m-L>', '<plug>(snapRepeatNext)')
+map.i('', '<m-O>', '<plug>(snapRepeatNext)')
+map.n('', '<m-O>', '<plug>(snapRepeatNext)')
+map.x('', '<m-O>', '<plug>(snapRepeatNext)')
+map.s('', '<m-O>', '<plug>(snapRepeatNext)')
 
 -- snap to previous placeholder
-map.i('', '<m-h>', '<plug>(snapPrev)')
-map.n('', '<m-h>', '<plug>(snapPrev)')
-map.x('', '<m-h>', '<plug>(snapPrev)')
-map.s('', '<m-h>', '<plug>(snapPrev)')
-map.o('', '<m-h>', '<plug>(snapPrev)')
+map.i('', '<m-i>', '<plug>(snapPrev)')
+map.n('', '<m-i>', '<plug>(snapPrev)')
+map.x('', '<m-i>', '<plug>(snapPrev)')
+map.s('', '<m-i>', '<plug>(snapPrev)')
+map.o('', '<m-i>', '<plug>(snapPrev)')
 
 -- repeat last snap on previous placeholder
-map.i('', '<m-H>', '<plug>(snapRepeatPrev)')
-map.n('', '<m-H>', '<plug>(snapRepeatPrev)')
-map.x('', '<m-H>', '<plug>(snapRepeatPrev)')
-map.s('', '<m-H>', '<plug>(snapRepeatPrev)')
+map.i('', '<m-I>', '<plug>(snapRepeatPrev)')
+map.n('', '<m-I>', '<plug>(snapRepeatPrev)')
+map.x('', '<m-I>', '<plug>(snapRepeatPrev)')
+map.s('', '<m-I>', '<plug>(snapRepeatPrev)')
 
 -- luasnips {{{1
 
-map.n('s', '<m-o>', "<cmd>lua require'luasnip'.jump(1)<cr>")
-map.n('s', '<m-i>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
+map.n('s', '<m-l>', "<cmd>lua require'luasnip'.jump(1)<cr>")
+map.n('s', '<m-h>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
 
-map.i('s', '<m-o>', '<plug>luasnip-expand-or-jump')
-map.i('s', '<m-i>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
+map.i('s', '<m-l>', '<plug>luasnip-expand-or-jump')
+map.i('s', '<m-h>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
 
-map.s('s', '<m-o>', "<cmd>lua require'luasnip'.jump(1)<cr>")
-map.s('s', '<m-i>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
+map.s('s', '<m-l>', "<cmd>lua require'luasnip'.jump(1)<cr>")
+map.s('s', '<m-h>', "<cmd>lua require'luasnip'.jump(-1)<cr>")
 
-map.i('se', '<m-[>', "luasnip#choice_active() ? '<plug>luasnip-next-choice' : ''")
-map.s('se', '<m-[>', "luasnip#choice_active() ? '<plug>luasnip-next-choice' : ''")
+map.i('se', '<m-k>', "luasnip#choice_active() ? '<plug>luasnip-next-choice' : ''")
+map.s('se', '<m-k>', "luasnip#choice_active() ? '<plug>luasnip-next-choice' : ''")
 
 -- iter {{{1
 
