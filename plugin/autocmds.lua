@@ -1,63 +1,62 @@
 -- Author: Nova Senco
--- Last Change: 01 June 2022
+-- Last Change: 02 June 2022
 
-local A = require'utils.autocmd'.build('NovaAutocmds')
+local au = require'utils.autocmd'.build('NovaAutocmds')
+
+-- au('VimEnter', 'exe "norm Adate\\<m-l>"')
 
 -- save and restore view persistently
-A('BufWinLeave', 'call mkview#make()')
-A('VimLeave', 'call mkview#make()')
-A('BufWinEnter', 'call mkview#load()')
+au('BufWinLeave', 'call mkview#make()')
+au('VimLeave', 'call mkview#make()')
+au('BufWinEnter', 'call mkview#load()')
 
 -- *do NOT* insert comment when using o/O in normal mode
 -- *do* insert comment when pressing <cr> in insert mode
 --      EVER.
-A('BufWinEnter', 'setlocal formatoptions+=r')
-A('BufWinEnter', 'setlocal formatoptions-=o')
-A('FileType',    'setlocal formatoptions+=r')
-A('FileType',    'setlocal formatoptions-=o')
+au('BufWinEnter', 'setlocal formatoptions+=r')
+au('BufWinEnter', 'setlocal formatoptions-=o')
+au('FileType',    'setlocal formatoptions+=r')
+au('FileType',    'setlocal formatoptions-=o')
 
 -- -- save and restore window before and after hivis runs
 -- A('User', 'let w:hivis_viewsav = winsaveview()', 'HivisPre')
 -- A('User', 'call winrestview(w:hivis_viewsav)', 'Hivis')
 
 -- autohandle swapfiles
-A('SwapExists', "call autocmd#HandleSwap(expand('<afile>:p'))")
+au('SwapExists', "call autocmd#HandleSwap(expand('<afile>:p'))")
 
 -- autoupdate "Last Changed"
-A('BufWritePre', 'call autocmd#updateLastChange()')
+au('BufWritePre', 'call autocmd#updateLastChange()')
 
 -- don't fold the command window
-A('CmdwinEnter', 'setl nofoldenable foldlevel=99')
+au('CmdwinEnter', 'setl nofoldenable foldlevel=99')
 
 -- don't store swap, backup, viminfo for files in /tmp
-A('VimEnter,BufNew', "if expand('<afile>:p') =~ '^/tmp'")
-A('VimEnter,BufNew', '  setl noswapfile nowritebackup nobackup')
-A('VimEnter,BufNew', 'endif')
+au('VimEnter,BufNew', "if expand('<afile>:p') =~ '^/tmp'")
+au('VimEnter,BufNew', '  setl noswapfile nowritebackup nobackup')
+au('VimEnter,BufNew', 'endif')
 
 -- view PDF in vim
-A('BufRead', "let _r = fnameescape(expand('%:r'))", '*.pdf')
-A('BufRead', "exe 'e' _r.'_pdf.txt'", '*.pdf')
-A('BufRead', 'setl bt=nofile', '*.pdf')
-A('BufRead', "exe 'sil r !pdftotext' _r.'.pdf -'", '*.pdf')
-A('BufRead', '1d', '*.pdf')
+au('BufRead', "let _r = fnameescape(expand('%:r'))", '*.pdf')
+au('BufRead', "exe 'e' _r.'_pdf.txt'", '*.pdf')
+au('BufRead', 'setl bt=nofile', '*.pdf')
+au('BufRead', "exe 'sil r !pdftotext' _r.'.pdf -'", '*.pdf')
+au('BufRead', '1d', '*.pdf')
 
 -- open folds with incsearch
-A('CmdlineChanged', 'silent! foldopen', '[/?]')
+au('CmdlineChanged', 'silent! foldopen', '[/?]')
 
 -- A('BufWritePost', [[exe "lua require'packer'.sync()" | exe 'doautocmd ColorScheme' g:colors_name]], '*/lua/plugins.lua')
-A('BufWritePost', function() package.loaded.plugins = nil require'plugins' require'packer'.sync() end, '*/lua/plugins.lua')
-
--- auto close response when terminal closed
-A('TermClose', [[call feedkeys("\<esc>", 'nt')]])
+au('BufWritePost', function() package.loaded.plugins = nil require'plugins' require'packer'.sync() end, '*/lua/plugins.lua')
 
 -- start insert when entering terminal window that was left with above mappings
-A({'BufWinEnter','WinEnter','CmdlineLeave'}, "if &bt is 'terminal' && get(b:, '_term_ins_')")
-A({'BufWinEnter','WinEnter','CmdlineLeave'}, '  startinsert')
-A({'BufWinEnter','WinEnter','CmdlineLeave'}, '  unlet! b:_term_ins_')
-A({'BufWinEnter','WinEnter','CmdlineLeave'}, 'endif')
+au({'BufWinEnter','WinEnter','CmdlineLeave'}, "if &bt is 'terminal' && get(b:, '_term_ins_')")
+au({'BufWinEnter','WinEnter','CmdlineLeave'}, '  startinsert')
+au({'BufWinEnter','WinEnter','CmdlineLeave'}, '  unlet! b:_term_ins_')
+au({'BufWinEnter','WinEnter','CmdlineLeave'}, 'endif')
 
-A({'BufNewFile'}, [[call setline(1, readfile(stdpath('config')..'/lua/snippets/.skel'))]], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
-A({'BufNewFile'}, [[echo 'New snippet buffer created; read snippet skeleton (lua/snippets/.skel)']], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
+au({'BufNewFile'}, [[call setline(1, readfile(stdpath('config')..'/lua/snippets/.skel'))]], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
+au({'BufNewFile'}, [[echo 'New snippet buffer created; read snippet skeleton (lua/snippets/.skel)']], vim.fn.stdpath('config')..'/lua/snippets/*.lua')
 
 -- A('FileType', 'set fdm=marker')
 

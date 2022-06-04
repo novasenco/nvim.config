@@ -1,5 +1,5 @@
 
-require'luasnip.loaders.from_lua'.lazy_load{paths='lua/snippets'}
+require'luasnip.loaders.from_lua'.lazy_load{paths=vim.fn.stdpath'config'..'/lua/snippets'}
 local ls = require'luasnip'
 
 ls.config.set_config({
@@ -14,7 +14,7 @@ ls.config.set_config({
 	ext_base_prio = 300,
 	ext_prio_increase = 1,
 	enable_autosnippets = true,
-	store_selection_keys = '<m-o>',
+	store_selection_keys = '<m-l>',
 })
 
 -- local fd = vim.loop.fs_opendir(vim.fn.stdpath'config'..'/lua/snippets')

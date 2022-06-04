@@ -14,7 +14,7 @@ map.n('ns', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
 map.n('ns', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
 map.n('ns', '<leader>D', '<cmd>lua vim.diagnostic.setloclist()<cr>')
 
--- Lsp Setup {{{1
+-- lsp setup {{{1
 
 local function on_attach(_, bnr)
   -- Use an on_attach function to only map the following keys
@@ -23,19 +23,19 @@ local function on_attach(_, bnr)
   vim.api.nvim_buf_set_option(bnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local function m(l, c) map.bn(bnr, 'ns', l, '<cmd>lua '..c..'<cr>') end
-  m('gD',         'vim.lsp.buf.declaration()')
-  m('gd',         'vim.lsp.buf.definition()')
-  m('K',          'vim.lsp.buf.hover()')
-  m('gi',         'vim.lsp.buf.implementation()')
-  m('<c-k>',      'vim.lsp.buf.signature_help()')
+  m('gD',    'vim.lsp.buf.declaration()')
+  m('gd',    'vim.lsp.buf.definition()')
+  m('K',     'vim.lsp.buf.hover()')
+  m('gi',    'vim.lsp.buf.implementation()')
+  m('<c-k>', 'vim.lsp.buf.signature_help()')
   m('<leader>wa', 'vim.lsp.buf.add_workspace_folder()')
   m('<leader>wr', 'vim.lsp.buf.remove_workspace_folder()')
   m('<leader>wl', 'print(vim.inspect(vim.lsp.buf.list_workspace_folders()))')
-  m('<leader>bt', 'vim.lsp.buf.type_definition()')
-  m('<leader>br',  'vim.lsp.buf.rename()')
-  m('<leader>ba',  'vim.lsp.buf.code_action()')
-  m('<leader>br', 'vim.lsp.buf.references()')
-  m('<leader>bf', 'vim.lsp.buf.formatting()')
+  m('<leader>td', 'vim.lsp.buf.type_definition()')
+  m('<leader>r',  'vim.lsp.buf.rename()')
+  m('<leader>a',  'vim.lsp.buf.code_action()')
+  m('<localleader>gr', 'vim.lsp.buf.references()')
+  m('<localleader>gf', 'vim.lsp.buf.formatting()')
 end
 
 local function setup(name, cfg)
@@ -45,12 +45,12 @@ local function setup(name, cfg)
 end
 
 
--- c {{{2
+-- c {{{1
 
 setup'clangd'
 setup'ccls'
 
--- lua {{{2
+-- lua {{{1
 
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, "lua/?.lua")
@@ -90,7 +90,7 @@ setup('sumneko_lua', {
   },
 })
 
--- vim {{{2
+-- vim {{{1
 
 setup('vimls', {
   diagnostic = { enable = true },

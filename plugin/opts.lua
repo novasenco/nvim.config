@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 14 April 2022
+-- Last Change: 02 June 2022
 
 -- init {{{1
 
@@ -63,7 +63,7 @@ vim.o.pumheight      = 10
 vim.o.ruler          = false
 vim.o.shiftround     = true
 vim.o.shiftwidth     = 0
-vim.o.shortmess      = default'shm'..'acsSt'
+vim.o.shortmess      = 'filnmrwxtToOFcWAc'
 vim.o.showbreak      = '↪'
 vim.o.showcmd        = false
 vim.o.showmode       = false
