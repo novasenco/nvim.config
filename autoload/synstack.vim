@@ -1,5 +1,5 @@
 " Author: Nova Senco
-" Last Change: 27 April 2021
+" Last Change: 04 June 2022
 
 let s:atts = ['bold', 'italic', 'reverse', 'inverse', 'standout', 'underline', 'undercurl', 'strikethrough']
 let s:colors = ['ctermfg', 'ctermbg', 'guifg', 'guibg']
@@ -37,5 +37,40 @@ function! synstack#echo()
   if first
     unsilent echon 'No syntax groups under cursor'
   endif
+endfunction
+
+function! synstack#vExprPrint()
+  let m = mode()
+  let l = abs(line('v') - line('.')) + 1
+  unsil echon m ': '
+  echohl Number
+  unsil echon l
+  echohl NONE
+  if m is "\<c-v>"
+    echon 'x'
+    echohl Number
+    echon abs(virtcol('v') - virtcol('.')) + 1
+    echohl NONE
+  endif
+  let wc = wordcount()
+  echohl SpecialKey
+  echon ' -> '
+  echohl Number
+  unsil echon wc.visual_chars
+  echohl NONE
+  echon ' chars'
+  echohl SpecialKey
+  echon ' -> '
+  echohl Number
+  unsil echon wc.visual_bytes
+  echohl NONE
+  echon ' bytes'
+  echohl SpecialKey
+  echon ' -> '
+  echohl Number
+  unsil echon wc.visual_words
+  echohl NONE
+  echon ' words'
+  return ''
 endfunction
 

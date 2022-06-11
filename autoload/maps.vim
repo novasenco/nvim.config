@@ -1,5 +1,5 @@
 " Author: Nova Senco
-" Last Change: 06 March 2022
+" Last Change: 04 June 2022
 
 " Quick: {{{1
 
@@ -50,34 +50,6 @@ function! maps#nextFile(forwards)
   exe 'edit' fnameescape(dotpre ? files[ind][2:] : files[ind])
 endfunction
 
-function! maps#nextChange(forwards)
-  if a:forwards
-    norm! ]c
-  else
-    norm! [c
-  endif
-  let changeid = hlID('DiffChange')
-  let diffhlid = diff_hlID('.', 1)
-  if diffhlid != changeid
-    " (a) no diff hl here, (b) DiffText hl id here (already right)
-    " (c) DiffAdd here
-    return
-  endif
-  let textid = hlID('DiffText')
-  for colm in range(1, col('$'))
-    if diffhlid == textid
-      let curpos = getcurpos()
-      let curpos[2] = colm
-      let curpos[4] = colm
-      call setpos('.', curpos)
-      break
-    endif
-    let colm += 1
-    let diffhlid = diff_hlID('.', colm)
-  endfor
-endfunction
-
-
 " Random: {{{1
 
 function! maps#stargn(exact)
@@ -107,41 +79,6 @@ function! maps#qfToggle()
     cclose
     call win_gotoid(wid)
   endif
-endfunction
-
-function! maps#vExprPrint()
-  let m = mode()
-  let l = abs(line('v') - line('.')) + 1
-  unsil echon m ': '
-  echohl Number
-  unsil echon l
-  echohl NONE
-  if m is "\<c-v>"
-    echon 'x'
-    echohl Number
-    echon abs(virtcol('v') - virtcol('.')) + 1
-    echohl NONE
-  endif
-  let wc = wordcount()
-  echohl SpecialKey
-  echon ' -> '
-  echohl Number
-  unsil echon wc.visual_chars
-  echohl NONE
-  echon ' chars'
-  echohl SpecialKey
-  echon ' -> '
-  echohl Number
-  unsil echon wc.visual_bytes
-  echohl NONE
-  echon ' bytes'
-  echohl SpecialKey
-  echon ' -> '
-  echohl Number
-  unsil echon wc.visual_words
-  echohl NONE
-  echon ' words'
-  return ''
 endfunction
 
 " when cursor at EOL and <cr> and opening brace, add closing brace 2 lines down;

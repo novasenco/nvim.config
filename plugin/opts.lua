@@ -1,9 +1,7 @@
 -- Author: Nova Senco
--- Last Change: 02 June 2022
+-- Last Change: 05 June 2022
 
--- init {{{1
-
--- helpers {{{2
+-- helpers {{{1
 
 local default = function(op) return vim.api.nvim_get_option_info(op).default end
 local executable = function(cmd) return vim.fn.executable(cmd) ~= 0 end
@@ -15,14 +13,14 @@ local nvim_dir = function(t)
   return e and tostring(e)
 end
 
--- $XDG_{DATA,CACHE}_DIR {{{2
+-- $XDG_{DATA,CACHE}_DIR {{{1
 for _,p in ipairs{'data', 'cache'} do
   local e = tostring(vim.fn.getenv(string.format('XDG_%s_DIR', string.upper(p))))
   local e1 = e..'/nvim'
   vim.fn.setenv('NVIM_'..p:upper()..'_DIR', e and e1 or vim.fn.stdpath(p))
 end
 
--- $NVIM_{BACKUP,SWAP,UNDO}_DIR {{{2
+-- $NVIM_{BACKUP,SWAP,UNDO}_DIR {{{1
 for p,t in pairs({['BACKUP']='DATA', ['SWAP']='CACHE', ['UNDO']='DATA'}) do
   local e = nvim_dir(p)
   if e == '' or not e then

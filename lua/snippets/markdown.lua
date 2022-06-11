@@ -12,7 +12,6 @@ local choice = ls.choice_node
 local fmt = lsf.fmt
 
 return {
-  snippet('{@:foo}', {
-    text'bar'
-  }),
+  snippet('img', fmt('![{}]({})', { ins(1, 'alt'), ins(2, 'img.png') })),
+  snippet('link', fmt('[{}]({})', { ins(1, 'txt'), ins(2, 'url') })),
 }

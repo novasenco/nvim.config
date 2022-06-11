@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 11 April 2022
+-- Last Change: 04 June 2022
 
 -- Usage:
 --   <leader>BB ------------------ paste current line to {paste-site}
@@ -47,13 +47,13 @@
 --   envs    -> https://envs.sh
 --   termbin -> https://termbin.com
 
-local map = require'utils.map'
+local map = require'utils.map'.set
 local cmd = vim.api.nvim_create_user_command
 local opts
 
-map.n('sn', '<leader>B', ':<c-u>set opfunc=paste#bin<cr>g@')
-map.x('sn', '<leader>B', ':<c-u>call paste#bin(visualmode())<cr>')
-map.n('s', '<leader>BB', 'V<space>B')
+map('n',  '<leader>B', ':<c-u>set opfunc=paste#bin<cr>g@', 'sn')
+map('x',  '<leader>B', ':<c-u>call paste#bin(visualmode())<cr>', 'sn')
+map('n',  '<leader>BB', 'V<space>B', 's')
 
 opts = { bang=false, complete='customlist,paste#complete', range='%', nargs='?', bar=true }
 cmd('Pastebin', "call paste#bin('command', <line1>, <line2>, <q-args>)", opts)

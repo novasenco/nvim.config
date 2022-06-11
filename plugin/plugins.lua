@@ -1,12 +1,11 @@
 -- Author: Nova Senco
--- Last Change: 15 April 2022
+-- Last Change: 05 June 2022
 
 local sync
 local packer
 local au = require'utils.autocmd'.build'NovaPlugins'
 
--- plugins {{{1
-local function plugins(use)
+local function plugins(use) -- {{{1
 
   use { -- packer {{{2
     -- required to avoid annoyances
@@ -102,14 +101,18 @@ local function plugins(use)
     'godlygeek/tabular'
   }
 
-  -- fzf {{{2
-  use { 'junegunn/fzf' }
-  use { 'junegunn/fzf.vim' }
+  use { -- fzf {{{2
+    'junegunn/fzf'
+  }
+
+  use {
+    'junegunn/fzf.vim'
+  }
 
   use { -- goyo {{{2
     'junegunn/goyo.vim', as='goyo',
-        opt=true
-      }
+    opt=true
+  }
 
   use { -- zen-mode {{{2
     'folke/zen-mode.nvim', as='zen-mode'

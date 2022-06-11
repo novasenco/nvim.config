@@ -1,6 +1,6 @@
 local ls = require'luasnip'
--- local lsx = require'luasnip.extras'
 -- local lsf = require'luasnip.extras.fmt'
+-- local lsx = require'luasnip.extras'
 
 local snippet = ls.snippet
 local text = ls.text_node
@@ -9,11 +9,12 @@ local dyn = ls.dynamic_node
 local func = ls.function_node
 local snip = ls.snippet_node
 local choice = ls.choice_node
+-- local fmt = lsf.fmt
 
 return {
 
   snippet('#!', {
-    text{'#!/usr/bin/env python3', '# -*- coding: utf-8 -*-'},
+    text{'#!/usr/bin/env python3', '# -*- coding: utf-8 -*-', ''},
   }),
 
   snippet('def', {

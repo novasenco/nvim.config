@@ -1,27 +1,27 @@
 -- Author: Nova Senco
--- Last Change: 01 June 2022
+-- Last Change: 06 June 2022
 
-local C = vim.api.nvim_create_user_command
-local o -- opts
+local cmd = vim.api.nvim_create_user_command
+local opts
 
-o = { bang=true, bar=true, nargs='?' }
-C('Q'  , 'q<bang> <args>'  , o)
-C('QA' , 'qa<bang> <args>' , o)
-C('Qa' , 'qa<bang> <args>' , o)
-C('WQ' , 'wq<bang> <args>' , o)
-C('Wq' , 'wq<bang> <args>' , o)
-C('WQA', 'wqa<bang> <args>', o)
-C('WQa', 'wqa<bang> <args>', o)
-C('Wqa', 'wqa<bang> <args>', o)
+opts = { bang=true, bar=true, nargs='?' }
+cmd('Q'  , 'q<bang> <args>'  , opts)
+cmd('QA' , 'qa<bang> <args>' , opts)
+cmd('Qa' , 'qa<bang> <args>' , opts)
+cmd('WQ' , 'wq<bang> <args>' , opts)
+cmd('Wq' , 'wq<bang> <args>' , opts)
+cmd('WQA', 'wqa<bang> <args>', opts)
+cmd('WQa', 'wqa<bang> <args>', opts)
+cmd('Wqa', 'wqa<bang> <args>', opts)
 
 -- :{arg,buf,win}do without mucking syntax or changing buffers
-o = { nargs='+' }
-C('Argdo', 'call cmds#ArgDo(<q-args>)', o)
-C('Bufdo', 'call cmds#BufDo(<q-args>)', o)
-C('Windo', 'call cmds#WinDo(<q-args>)', o)
+opts = { nargs='+' }
+cmd('Argdo', 'call cmds#ArgDo(<q-args>)', opts)
+cmd('Bufdo', 'call cmds#BufDo(<q-args>)', opts)
+cmd('Windo', 'call cmds#WinDo(<q-args>)', opts)
 
 -- preserve view while executing some command
-C('Keepview', table.concat({
+cmd('Keepview', table.concat({
   'let g:viewsav=winsaveview()',
   'exe escape(<q-args>, \'\\"\')',
   'call winrestview(g:viewsav)',
@@ -29,26 +29,26 @@ C('Keepview', table.concat({
   }, '|'), { nargs=1, bar=true })
 
 -- search all args with :grep or :vimgrep (do NOT use on big files)
-o = { nargs='+', bar=true }
-C('ArgGrep'   , 'call cmds#FilelistGrep(<q-args>, argv())'   , o)
-C('ArgVimgrep', 'call cmds#FilelistVimgrep(<q-args>, argv())', o)
+opts = { nargs='+', bar=true }
+cmd('ArgGrep'   , 'call cmds#FilelistGrep(<q-args>, argv())'   , opts)
+cmd('ArgVimgrep', 'call cmds#FilelistVimgrep(<q-args>, argv())', opts)
 
 -- search all listed buffers with :grep or :vimgrep (do NOT use on big files)
-C('BufGrep'   , 'call cmds#FilelistGrep(<q-args>, filter(range(1, bufnr("$")), funcref("cmds#Bufcheck")))', o)
-C('BufVimgrep', 'call cmds#FilelistVimgrep(<q-args>, filter(range(1, bufnr("$")), funcref("cmds#Bufcheck")))', o)
+cmd('BufGrep'   , 'call cmds#FilelistGrep(<q-args>, filter(range(1, bufnr("$")), funcref("cmds#Bufcheck")))', opts)
+cmd('BufVimgrep', 'call cmds#FilelistVimgrep(<q-args>, filter(range(1, bufnr("$")), funcref("cmds#Bufcheck")))', opts)
 
 -- put an ex command - eg :Put version
-o = { range=true, nargs='+', complete='command' }
-C('Put' , 'call cmds#Put(<q-args>, <line1>, getcurpos(), 0, "")', o)
-C('Sput', 'call cmds#Put(<q-args>, <line1>, getcurpos(), 1, <q-mods>)', o)
+opts = { range=true, nargs='+', complete='command' }
+cmd('Put' , 'call cmds#Put(<q-args>, <line1>, getcurpos(), 0, "")', opts)
+cmd('Sput', 'call cmds#Put(<q-args>, <line1>, getcurpos(), 1, <q-mods>)', opts)
 
 -- still synchronous but quieter make
-o = { bar=true, nargs='?' }
-C('Make' , 'call cmds#Make(<q-args>)', o)
-C('Lmake', 'call cmds#Lmake(<q-args>)', o)
+opts = { bar=true, nargs='?' }
+cmd('Make' , 'call cmds#Make(<q-args>)', opts)
+cmd('Lmake', 'call cmds#Lmake(<q-args>)', opts)
 
 -- :help :DiffOrig
-C('DiffOrig', table.concat({
+cmd('DiffOrig', table.concat({
   'vert new',
   'set buftype=nofile',
   'read ++e#',
@@ -59,14 +59,24 @@ C('DiffOrig', table.concat({
   }, '|'), {})
 
 -- clear quickfix
-C('Cclear', 'call setqflist([], "r")', { nargs=0 })
+cmd('Cclear', 'call setqflist([], "r")', { nargs=0 })
 
 -- neovim, come on, bestie
-C('Sterminal', '<mods> split | terminal <args>', { nargs='*' })
+cmd('Sterminal', '<mods> split | terminal <args>', { nargs='*' })
 
--- C('Snip', function(c)
---   local f = vim.fn.stdpath('config')..'/lua/snippets/'..(c.args == '' and vim.o.filetype or c.args)..'.lua'
---   vim.cmd("execute 'edit' fnameescape("..vim.fn.string(f)..')')
--- end, {nargs='?'})
-C('Snip', "execute 'edit' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})
-C('Ssnip', "execute <q-mods> 'sp' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})
+cmd('Snip', function(c)
+  local f = vim.fn.stdpath('config')..'/lua/snippets/'..(c.args == '' and vim.o.filetype or c.args)..'.lua'
+  vim.cmd('edit '..f)
+end, {nargs='?'})
+
+cmd('Ssnip', function(c)
+  local f = vim.fn.stdpath('config')..'/lua/snippets/'..(c.args == '' and vim.o.filetype or c.args)..'.lua'
+  print(vim.inspect( c ))
+  vim.api.nvim_cmd({
+    cmd = 'split',
+    args = { f },
+    mods = c.smods,
+  }, {})
+end, {nargs='?'})
+-- C('Snip', "execute 'edit' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})
+-- C('Ssnip', "execute <q-mods> 'sp' fnameescape(stdpath('config')..'/lua/snippets/'..(empty(<q-args>) ? &filetype : <q-args>)..'.lua')", {nargs='?'})

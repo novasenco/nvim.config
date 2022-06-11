@@ -1,7 +1,7 @@
 -- Author: Nova Senco
--- Last Change: 02 April 2022
+-- Last Change: 05 June 2022
 
-local map = require'utils.map'
+local map = require'utils.map'.set
 
 -- allow mapping <m-u>
 if vim.fn.has'nvim' == 0 and vim.fn.has'gui_running' == 0 then
@@ -10,23 +10,19 @@ if vim.fn.has'nvim' == 0 and vim.fn.has'gui_running' == 0 then
 end
 
 -- select url before cursor
-map.n('n', '<plug>(UrlPrev)', '<cmd>call url#UrlSelect(0, v:count1)<cr>')
-map.x('n', '<plug>(UrlPrev)', '<cmd>call url#UrlSelect(0, v:count1)<cr>')
+map('nx', '<plug>(UrlPrev)', '<cmd>call url#UrlSelect(0, v:count1)<cr>', 'n')
 
 -- select url after cursor
-map.n('n', '<plug>(UrlNext)', '<cmd>call url#UrlSelect(1, v:count1)<cr>')
-map.x('n', '<plug>(UrlNext)', '<cmd>call url#UrlSelect(1, v:count1)<cr>')
+map('nx', '<plug>(UrlNext)', '<cmd>call url#UrlSelect(1, v:count1)<cr>', 'n')
 
 -- open url under cursor
-map.n('n', 'gx', [[<cmd>execute 'silent !xdg-open' '"'..escape(expand('<cfile>'), '\"$')..'"'<cr>]])
-map.x('n', 'gx', '<cmd>call url#V_gx()<cr>')
+map('n', 'gx', [[<cmd>execute 'silent !xdg-open' '"'..escape(expand('<cfile>'), '\"$')..'"'<cr>]], 'n')
+map('x', 'gx', '<cmd>call url#V_gx()<cr>', 'n')
 
-map.n('n', 'gX', [[<cmd>call url#GX('"'..escape(expand('<cfile>')..'"', '\"$'))<cr>]])
-map.x('n', 'gX', '<cmd>call url#GX()<cr>')
+map('n', 'gX', [[<cmd>call url#GX('"'..escape(expand('<cfile>')..'"', '\"$'))<cr>]], 'n')
+map('x', 'gX', '<cmd>call url#GX()<cr>', 'n')
 
 -- maybe move to maps.lua
-map.n(_, '<leader>u', '<plug>(UrlNext)')
-map.x(_, '<leader>u', '<plug>(UrlNext)')
-map.n(_, '<leader>U', '<plug>(UrlPrev)')
-map.x(_, '<leader>U', '<plug>(UrlPrev)')
+map('nx', '<leader>u', '<plug>(UrlNext)', nil)
+map('nx', '<leader>U', '<plug>(UrlPrev)', nil)
 
