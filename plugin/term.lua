@@ -1,6 +1,6 @@
 
 local map = require'utils.map'.set
-local au = require'utils.autocmd'.build('NovaMaps')
+local au = require'utils.autocmd'.build('NovaTerm')
 
 -- make nvim terminal behave like vim terminal (mostly)
 map('t',  '<c-w>k', '<c-bslash><c-n>:let b:_term_ins_=1<cr><c-w>k', 'sn')
@@ -46,5 +46,5 @@ au('TermOpen', 'if &buflisted')
 
 au('TermOpen', 'endif')
 
--- auto close response when terminal closed
-au('TermClose', [[call feedkeys("\<esc>", 'nt')]])
+-- -- auto close response when terminal closed
+-- au('TermClose', [[call feedkeys("\<esc>", 'nt')]])

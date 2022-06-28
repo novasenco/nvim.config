@@ -1,9 +1,10 @@
 " Author: Nova Senco
-" Last Change: 23 April 2021
+" Last Change: 27 June 2022
 
 " realign visual selection's current corner if a:other is false
 " realign visual selection's other corner if a:other is true
 function! textobjs#visualGoOther(other)
+  execute "normal! \<c-bslash>\<c-n>"
   if a:other
     normal! gv
     execute 'normal! o'.virtcol('.').'|o'
@@ -17,6 +18,7 @@ endfunction
 " move other corner's line to current line if a:other is true
 "   NOTE: you can't do exe 'norm! gvo'.line('.').'G' in one step bc vim=silly
 function! textobjs#visualGoLine(other)
+  execute "normal! \<c-bslash>\<c-n>"
   if a:other
     normal! gv
     execute 'normal! o'.line('.').'Go'
@@ -44,6 +46,8 @@ function! textobjs#inNumber()
   " need magic for this to work properly
   let l:magic = &magic
   set magic
+
+  execute "normal! \<c-bslash>\<c-n>"
 
   let l:lineNr = line('.')
 
@@ -81,6 +85,8 @@ function! textobjs#aroundNumber()
   " need magic for this to work properly
   let l:magic = &magic
   set magic
+
+  execute "normal! \<c-bslash>\<c-n>"
 
   let l:lineNr = line('.')
 
@@ -124,6 +130,8 @@ function! textobjs#inIndentation()
   " magic is needed for this
   let l:magic = &magic
   set magic
+
+  execute "normal! \<c-bslash>\<c-n>"
 
   " move to beginning of line and get virtcol (current indentation level)
   " BRAM: there is no searchpairvirtpos() ;)
@@ -179,6 +187,8 @@ function! textobjs#aroundIndentation()
   " magic is needed for this (/\v doesn't seem work)
   let l:magic = &magic
   set magic
+
+  execute "normal! \<c-bslash>\<c-n>"
 
   " move to beginning of line and get virtcol (current indentation level)
   " BRAM: there is no searchpairvirtpos() ;)
