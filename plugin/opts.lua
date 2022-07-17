@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 05 June 2022
+-- Last Change: 02 July 2022
 
 -- helpers {{{1
 
@@ -84,6 +84,7 @@ vim.o.undodir        = nvim_dir'UNDO'..'//'
 vim.o.undofile       = true
 vim.o.updatetime     = 800
 vim.o.virtualedit    = 'insert,block'
+vim.o.wildignorecase = true
 vim.o.winminheight   = 0
 vim.o.winminwidth    = 0
 vim.o.wrap           = false
