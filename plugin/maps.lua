@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 06 June 2022
+-- Last Change: 17 July 2022
 
 -- setup {{{1
 
@@ -226,6 +226,7 @@ map('n', '<localleader>C', function()
   local dn = vim.fn.stdpath'config'..'/plugin/'
   local fd  = vim.loop.fs_opendir(dn, nil, 10)
   local fs = vim.loop.fs_readdir(fd)
+  local files = {}
   while fs do
     for _,f in ipairs(fs) do
       if f.type == 'file' then
@@ -236,14 +237,16 @@ map('n', '<localleader>C', function()
           cmd = 'source'
         end
         if cmd then
-          vim.api.nvim_cmd({ cmd=cmd, args={dn..f.name} })
+          files[#files+1] = f.name
+          vim.api.nvim_cmd({ cmd=cmd, args={dn..f.name} }, {})
         end
       end
     end
     fs = vim.loop.fs_readdir(fd)
   end
   vim.loop.fs_closedir(fd)
-  print'Reloaded plugin/ scripts'
+  print(vim.inspect( files ))
+  print(string.format('Reloaded plugin/{%s}', table.concat(files, ',')))
   end, 'sn', 'reload config')
 
 -- spell {{{1
