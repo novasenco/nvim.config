@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 02 July 2022
+-- Last Change: 17 July 2022
 
 -- helpers {{{1
 
@@ -36,8 +36,8 @@ end
 vim.o.backup         = true
 vim.o.backupdir      = nvim_dir'BACKUP'..'//'
 vim.o.backupext      = '.bak'
-vim.o.breakindent    = true
-vim.o.breakindentopt = 'min:10,shift:1'
+vim.o.breakindent    = false
+vim.o.breakindentopt = 'min:80,sbr'
 vim.o.colorcolumn    = '+0'
 vim.o.completeopt    = 'menu,menuone'
 vim.o.cpoptions      = default'cpo'..'y'
