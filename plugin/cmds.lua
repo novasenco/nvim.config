@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 06 June 2022
+-- Last Change: 30 July 2022
 
 local cmd = vim.api.nvim_create_user_command
 local opts
@@ -60,9 +60,6 @@ cmd('DiffOrig', table.concat({
 
 -- clear quickfix
 cmd('Cclear', 'call setqflist([], "r")', { nargs=0 })
-
--- neovim, come on, bestie
-cmd('Sterminal', '<mods> split | terminal <args>', { nargs='*' })
 
 cmd('Snip', function(c)
   local f = vim.fn.stdpath('config')..'/lua/snippets/'..(c.args == '' and vim.o.filetype or c.args)..'.lua'

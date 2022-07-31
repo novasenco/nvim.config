@@ -1,5 +1,5 @@
 -- Author: Nova Senco
--- Last Change: 06 June 2022
+-- Last Change: 30 July 2022
 
 -- Autocommands
 
@@ -35,13 +35,9 @@ au('BufWritePost', function()
   package.loaded.plugins = nil require'plugins' require'packer'.sync()
 end, '*/lua/plugins.lua')
 
--- start insert when entering terminal window that was left with above mappings
-au('BufWinEnter,WinEnter,CmdlineLeave', "if &bt is 'terminal' && get(b:, '_term_ins_')")
-au('BufWinEnter,WinEnter,CmdlineLeave', '  startinsert')
-au('BufWinEnter,WinEnter,CmdlineLeave', '  unlet! b:_term_ins_')
-au('BufWinEnter,WinEnter,CmdlineLeave', 'endif')
-
--- A('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'nokto')
--- A('ColorScheme', 'highlight ColorColumn ctermbg=235 guibg=#262626', 'nokto')
--- A('ColorScheme', 'highlight NonText ctermbg=NONE guibg=NONE cterm=bold gui=bold', 'nokto')
+-- au('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'nokto')
+-- au('ColorScheme', 'highlight Normal ctermbg=NONE guibg=NONE', 'vulpo')
+-- vim.cmd[[exe 'doautocmd ColorScheme' get(g:, 'colors_name', 'default')]]
+-- au('ColorScheme', 'highlight ColorColumn ctermbg=235 guibg=#262626', 'nokto')
+-- au('ColorScheme', 'highlight NonText ctermbg=NONE guibg=NONE cterm=bold gui=bold', 'nokto')
 
